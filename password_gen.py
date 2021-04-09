@@ -1,4 +1,4 @@
-from os import curdir, system
+from os import system
 from os import path
 from cryptography.fernet import Fernet
 
