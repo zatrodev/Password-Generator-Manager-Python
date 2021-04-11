@@ -53,14 +53,11 @@ def generate_pass(length, password=[]):
     for _ in range(length):
         rand = random.randint(1, 3)
         if rand == 1:
-            password.append(
-                string.ascii_letters[random.randint(0, len(string.ascii_letters) - 1)])
+            password.append(random.choice(string.ascii_letters))
         elif rand == 2:
-            password.append(
-                string.punctuation[random.randint(0, len(string.punctuation) - 1)])
+            password.append(random.choice(string.punctuation))
         elif rand == 3:
-            password.append(
-                string.digits[random.randint(0, len(string.digits) - 1)])
+            password.append(random.choice(string.digits))
 
     return ''.join(map(str, password))
 
