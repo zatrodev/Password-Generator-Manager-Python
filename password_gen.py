@@ -1,4 +1,4 @@
-from os import system
+from os import remove, system
 from os import path
 from cryptography.fernet import Fernet
 
@@ -9,7 +9,7 @@ import json
 import pyperclip
 
 
-""" DATA ENCRYPTION """
+""" FILE ENCRYPTION """
 
 
 def write_key():
@@ -51,7 +51,8 @@ def decrypt(filename, key):
 
 def generate_pass(length, password=[]):
     for _ in range(length):
-        password.append(random.choice([random.choice(string.ascii_letters), random.choice(string.punctuation), random.choice(string.digits)]))
+        password.append(random.choice([random.choice(string.ascii_letters), random.choice(
+            string.punctuation), random.choice(string.digits)]))
 
     return ''.join(map(str, password))
 
@@ -63,17 +64,12 @@ def write_pass():
     psswd = generate_pass(length)
 
     try:
-        with open('passwords.txt', 'r+') as f:
+        decrypt("passwords.txt", key)
+        with open('passwords.txt', 'r') as f:
             data = json.load(f)
 
             if email in data:
                 for dat in data[email]:
-                    """
-                    if not isinstance(dat["website"], list) and not isinstance(dat["password"], list):
-                        dat["website"] = [dat["website"]]
-                        dat["password"] = [dat["password"]]
-                    """
-
                     dat["website"].append(website)
                     dat["password"].append(psswd)
 
@@ -113,26 +109,57 @@ def write_pass():
 def look_pass():
     try:
         decrypt("passwords.txt", key)
-        with open('passwords.txt', "r+") as f:
+        with open('passwords.txt', "r") as f:
             data = json.load(f)
             encrypt("passwords.txt", key)
-
-        # email = input("Enter email: ")
 
         print("--- PASSWORDS ---")
         for email in data:
             print(email)
             for dat in data[email]:
                 for i in range(len(dat["website"])):
-                    print(dat["website"][i], " : ", dat["password"][i])
+                    print(dat["website"][i].upper(), " : ", dat["password"][i])
 
     except FileNotFoundError:
         print("No Accounts Created")
 
 
+def remove_pass():
+    erase_email = input("Email: ")
+    erase_site = input("Site (If no restrictions, input 0): ")
+
+    try:
+        decrypt("passwords.txt", key)
+        with open("passwords.txt", "r") as f:
+            data = json.load(f)
+            
+            if erase_email in data:
+                if erase_site == '0':
+                    del data[erase_email]
+                else:
+                    for dat in data[erase_email]:
+                        if erase_site in dat["website"]:
+                            dat["password"].pop(dat["website"].index(erase_site))
+                            dat["website"].remove(erase_site)
+                        else:
+                            print("No Site Found") 
+            else:
+                print("No Account Found")
+
+
+            with open("passwords.txt", "w") as file:
+                json.dump(data, file)
+            
+            encrypt("passwords.txt", key)
+            
+    except FileNotFoundError:
+        print("File Not Found")
+
+
 def main():
     print("1. Generate Password")
-    print("2. Look at passwords\n")
+    print("2. Look at passwords")
+    print("3. Remove a Password\n")
     choice = int(input("Enter number: "))
     if choice == 1:
         system("cls")
@@ -141,6 +168,10 @@ def main():
     elif choice == 2:
         system("cls")
         look_pass()
+
+    elif choice == 3:
+        system("cls")
+        remove_pass()
 
 
 if __name__ == "__main__":
