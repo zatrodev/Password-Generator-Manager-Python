@@ -51,13 +51,7 @@ def decrypt(filename, key):
 
 def generate_pass(length, password=[]):
     for _ in range(length):
-        rand = random.randint(1, 3)
-        if rand == 1:
-            password.append(random.choice(string.ascii_letters))
-        elif rand == 2:
-            password.append(random.choice(string.punctuation))
-        elif rand == 3:
-            password.append(random.choice(string.digits))
+        password.append(random.choice([random.choice(string.ascii_letters), random.choice(string.punctuation), random.choice(string.digits)]))
 
     return ''.join(map(str, password))
 
