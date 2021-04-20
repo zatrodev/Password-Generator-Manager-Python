@@ -68,25 +68,26 @@ def write_pass():
         with open('passwords.txt', 'r') as f:
             data = json.load(f)
 
-            if email in data:
-                for dat in data[email]:
-                    dat["website"].append(website)
-                    dat["password"].append(psswd)
+        if email in data:
+            for dat in data[email]:
+                dat["website"].append(website)
+                dat["password"].append(psswd)
 
+            with open('passwords.txt', 'w') as f:
                 f.seek(0)
                 json.dump(data, f)
 
-            else:
-                acc = {}
-                acc[email] = []
-                acc[email].append({
-                    "website": [website],
-                    "password": [psswd]
-                })
+        else:
+            acc = {}
+            acc[email] = []
+            acc[email].append({
+                "website": [website],
+                "password": [psswd]
+            })
 
-                data.update(acc)
-                f.seek(0)
-                json.dump(data, f)
+            data.update(acc)
+            f.seek(0)
+            json.dump(data, f)
 
     except FileNotFoundError:
         data = {}
