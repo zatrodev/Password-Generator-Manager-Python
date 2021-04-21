@@ -65,28 +65,26 @@ def write_pass():
 
     try:
         decrypt("passwords.txt", key)
-        with open('passwords.txt', 'r') as f:
+        with open('passwords.txt', 'r+') as f:
             data = json.load(f)
 
-        if email in data:
-            for dat in data[email]:
-                dat["website"].append(website)
-                dat["password"].append(psswd)
+            if email in data:
+                for dat in data[email]:
+                    dat["website"].append(website)
+                    dat["password"].append(psswd)
 
-            with open('passwords.txt', 'w') as f:
                 f.seek(0)
                 json.dump(data, f)
 
-        else:
-            acc = {}
-            acc[email] = []
-            acc[email].append({
-                "website": [website],
-                "password": [psswd]
-            })
+            else:
+                acc = {}
+                acc[email] = []
+                acc[email].append({
+                    "website": [website],
+                    "password": [psswd]
+                })
 
-            data.update(acc)
-            with open('passwords.txt', 'w') as f:
+                data.update(acc)
                 f.seek(0)
                 json.dump(data, f)
 
