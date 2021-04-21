@@ -86,8 +86,9 @@ def write_pass():
             })
 
             data.update(acc)
-            f.seek(0)
-            json.dump(data, f)
+            with open('passwords.txt', 'w') as f:
+                f.seek(0)
+                json.dump(data, f)
 
     except FileNotFoundError:
         data = {}
